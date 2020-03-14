@@ -7,10 +7,10 @@ ol, ul {
     padding-left: 30px;
 }
 
-.board-row:after {
-    clear: both;
-    content: "";
-    display: table;
+div {
+}
+
+div#root {
 }
 
 .status {
@@ -45,9 +45,15 @@ ol, ul {
     background: #ddd;
 }
 
+.board-row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
 .game {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .game-info {
