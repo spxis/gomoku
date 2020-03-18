@@ -177,7 +177,7 @@ class Game extends React.Component {
         });
     }
 
-    checkForWin(board, player, rules, direction = 'horizontal') {
+    checkForRegularWin(board, player, rules, direction = 'horizontal') {
         let isWinner = false;
         let counter = 0;
 
@@ -226,9 +226,9 @@ class Game extends React.Component {
             cellsRequiredToWin: this.cellsRequiredToWin
         };
 
-        let isXWinner = this.checkForWin(this.board, player, rules, 'horizontal');
-        let isYWinner = this.checkForWin(this.board, player, rules, 'vertical');
-        // let isDWinner = this.checkForWin(this.board, player, rules, 'diagonal');
+        let isXWinner = this.checkForRegularWin(this.board, player, rules, 'horizontal');
+        let isYWinner = this.checkForRegularWin(this.board, player, rules, 'vertical');
+        // let isDWinner = this.checkForRegularWin(this.board, player, rules, 'diagonal');
 
         return isXWinner || isYWinner;
     }
