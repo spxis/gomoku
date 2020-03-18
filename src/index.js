@@ -1,36 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
-function Square(props) {
-    return (
-        <button
-            title={props.title}
-            className="square"
-            onClick={props.onClick}
-        >{props.value}</button>
-    );
-}
-
-function ResetGameButton(props) {
-    return (
-        <button
-            title="Reset Game"
-            className="button"
-            onClick={props.resetBoard}
-        >Reset</button>
-    );
-}
-
-function SkipTurnButton(props) {
-    return (
-        <button
-            title="Skip Turn"
-            className="button"
-            onClick={props.skipTurn}
-        >Skip Turn</button>
-    );
-}
+import {Square, BoardRow, ResetGameButton, SkipTurnButton} from './Board'
 
 class Board extends React.Component {
     constructor(props) {
@@ -67,7 +38,10 @@ class Board extends React.Component {
         for (const colId of cols) {
             columns.push(this.renderCell(rowId, colId));
         }
-        row.push(<div className="board-row" key="row-{rowId}">{columns}</div>);
+        row.push(<BoardRow
+            rowId={rowId}
+            columns={columns}
+        />);
 
         return row;
     }
@@ -256,13 +230,9 @@ class Game extends React.Component {
                 </div>
                 <div className="game-panel">
                     <ResetGameButton
-                        rows={this.board_rows}
-                        columns={this.board_columns}
                         resetBoard={this.resetBoard}
                     />
                     <SkipTurnButton
-                        board={this.state.board}
-                        isPlayerOne={this.state.isPlayerOne}
                         skipTurn={this.skipTurn}
                     />
                 </div>
