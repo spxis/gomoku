@@ -1,71 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {Square, BoardRow, ResetGameButton, SkipTurnButton} from './Board'
-
-class Board extends React.Component {
-    constructor(props) {
-        super(props);
-        this.rows = props.rows;
-        this.columns = props.columns;
-        this.board = props.board;
-        this.players = props.players;
-        this.isPlayerOne = props.isPlayerOne;
-        this.lastClicked = [-1, -1];
-    }
-
-    renderCell(x, y) {
-        return (
-            <Square
-                key={'row-' + x + '-col-' + y}
-                title={
-                    'Coordinates: [' + x + ',' + y + ']\n' +
-                    'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']'
-                }
-                value={
-                    this.props.board[x][y]
-                }
-                onClick={() => {
-                    this.props.clickCell(x, y);
-                }}
-            />
-        );
-    }
-
-    renderRow(rowId, cols) {
-        let row = [];
-        let columns = [];
-        for (const colId of cols) {
-            columns.push(this.renderCell(rowId, colId));
-        }
-        row.push(<BoardRow
-            rowId={rowId}
-            columns={columns}
-        />);
-
-        return row;
-    }
-
-    render() {
-        const rowCount = this.rows;
-        const colCount = this.columns;
-
-        let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.players.one : this.players.two);
-
-        const colIds = Array.from(Array(colCount), (d, i) => i);
-        let rows = [];
-        for (let rowId = 0; rowId < rowCount; rowId++) {
-            rows.push(this.renderRow(rowId, colIds));
-        }
-
-        return (
-            <div>
-                <div className="status">{status}</div>
-                {rows}
-            </div>
-        );
-    }
-}
+import {Board, ResetGameButton, SkipTurnButton} from './Board'
 
 class Game extends React.Component {
     constructor(props) {
