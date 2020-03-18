@@ -39,7 +39,8 @@ class Board extends React.Component {
         this.columns = props.columns;
         this.board = props.board;
         this.players = props.players;
-        this.playerIsBlack = props.playerIsBlack;
+        this.isPlayerOne = props.isPlayerOne;
+        this.lastClicked = [-1, -1];
     }
 
     renderCell(x, y) {
@@ -75,7 +76,7 @@ class Board extends React.Component {
         const rowCount = this.rows;
         const colCount = this.columns;
 
-        let status = 'Next up: Player ' + (this.props.playerIsBlack ? this.players.one : this.players.two);
+        let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.players.one : this.players.two);
 
         const colIds = Array.from(Array(colCount), (d, i) => i);
         let rows = [];
@@ -107,7 +108,8 @@ class Game extends React.Component {
         this.clickCell = this.clickCell.bind(this);
 
         this.board = this.createBoard(this.board_rows, this.board_columns);
-        this.playerIsBlack = true;
+        this.isPlayerOne = true;
+        this.lastClicked = [-1, -1];
         this.players = {
             one: 'X',
             two: 'O',
@@ -116,7 +118,8 @@ class Game extends React.Component {
         this.state = {
             board: this.board,
             players: this.players,
-            playerIsBlack: this.playerIsBlack
+            isPlayerOne: this.isPlayerOne,
+            lastClicked: this.lastClicked,
         };
     }
 
@@ -133,26 +136,44 @@ class Game extends React.Component {
 
     resetBoard() {
         this.board = this.createBoard(this.board_columns, this.board_rows);
-        this.playerIsBlack = true;
+        this.isPlayerOne = true;
         this.setState({
             board: this.board,
-            playerIsBlack: this.playerIsBlack,
+            isPlayerOne: this.isPlayerOne,
+            lastClicked: [-1, -1],
         });
     }
 
     skipTurn() {
-        this.playerIsBlack = !this.state.playerIsBlack;
+        this.isPlayerOne = !this.state.isPlayerOne;
         this.setState({
-            playerIsBlack: this.playerIsBlack,
+            isPlayerOne: this.isPlayerOne,
+            lastClicked: this.lastClicked,
         });
     }
 
     clickCell(x, y) {
         const board = [...this.board];
-        board[x][y] = this.state.playerIsBlack ? this.players.one : this.players.two;
+        const existingPiece = board[x][y];
+
+        if (existingPiece) {
+            // We are flipping an existing piece over.
+            if (board[x][y] === this.players.one) {
+                board[x][y] = this.players.two;
+            } else {
+                board[x][y] = null;
+            }
+            this.state.isPlayerOne = board[x][y] === this.players.two;
+        } else {
+            // We are placing into a blank square.
+            board[x][y] = this.state.isPlayerOne ? this.players.one : this.players.two;
+            this.state.isPlayerOne = !this.state.isPlayerOne;
+        }
+        this.state.lastClicked = [x, y];
         this.setState({
             board: board,
-            playerIsBlack: !this.state.playerIsBlack
+            isPlayerOne: this.state.isPlayerOne,
+            lastClicked: this.state.lastClicked
         });
     }
 
@@ -207,6 +228,7 @@ class Game extends React.Component {
 
         let isXWinner = this.checkForWin(this.board, player, rules, 'horizontal');
         let isYWinner = this.checkForWin(this.board, player, rules, 'vertical');
+        // let isDWinner = this.checkForWin(this.board, player, rules, 'diagonal');
 
         return isXWinner || isYWinner;
     }
@@ -220,19 +242,16 @@ class Game extends React.Component {
                         columns={this.board_columns}
                         board={this.state.board}
                         players={this.state.players}
-                        playerIsBlack={this.state.playerIsBlack}
+                        isPlayerOne={this.state.isPlayerOne}
                         clickCell={this.clickCell}
                     />
                 </div>
                 <div className="game-info">
                     Game Status:
                     <ul>
-                        <li>Player {this.players.one}: {
-                            this.hasWin(this.players.one) ? 'WIN' : '-'
-                        }</li>
-                        <li>Player {this.players.two}: {
-                            this.hasWin(this.players.two) ? 'WIN' : '-'
-                        }</li>
+                        <li>Player {this.players.one}: {this.hasWin(this.players.one) ? 'WIN' : '-'}</li>
+                        <li>Player {this.players.two}: {this.hasWin(this.players.two) ? 'WIN' : '-'}</li>
+                        <li>Last clicked cell [{this.state.lastClicked[0]},{this.state.lastClicked[1]}]</li>
                     </ul>
                 </div>
                 <div className="game-panel">
@@ -243,7 +262,7 @@ class Game extends React.Component {
                     />
                     <SkipTurnButton
                         board={this.state.board}
-                        playerIsBlack={this.state.playerIsBlack}
+                        isPlayerOne={this.state.isPlayerOne}
                         skipTurn={this.skipTurn}
                     />
                 </div>
