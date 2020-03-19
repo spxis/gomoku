@@ -95,7 +95,7 @@ function ResetGameButton(props) {
             title="Reset Game"
             className="button"
             onClick={props.resetBoard}
-        >Reset</button>
+        >Reset Game</button>
     );
 }
 
@@ -109,4 +109,14 @@ function SkipTurnButton(props) {
     );
 }
 
-export {Board, ResetGameButton, SkipTurnButton};
+function UndoTurnButton(props) {
+    return (
+        <button
+            title="Undo"
+            className="button"
+            onClick={props.undoLastMove}
+        >Undo Last Move</button>
+    );
+}
+
+export {Board, ResetGameButton, SkipTurnButton, UndoTurnButton};

@@ -1,28 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {Board, ResetGameButton, SkipTurnButton} from './Board'
+import {Board, ResetGameButton, SkipTurnButton, UndoTurnButton} from './Board'
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        this.board_rows = 3;
-        this.board_columns = 3;
+        this.board_rows = 10;
+        this.board_columns = 10;
         this.cellsRequiredToWin = 3;
         this.exactMatchRequired = true;
 
         this.createBoard = this.createBoard.bind(this);
         this.resetBoard = this.resetBoard.bind(this);
         this.skipTurn = this.skipTurn.bind(this);
+        this.undoLastMove = this.undoLastMove.bind(this);
         this.clickCell = this.clickCell.bind(this);
 
         this.board = this.createBoard(this.board_rows, this.board_columns);
         this.isPlayerOne = true;
         this.lastClicked = [-1, -1];
         this.players = {
-            one: 'H',
-            two: 'J',
+            one: 'X',
+            two: 'O',
         };
 
         this.state = {
@@ -60,6 +61,10 @@ class Game extends React.Component {
             isPlayerOne: this.isPlayerOne,
             lastClicked: this.lastClicked,
         });
+    }
+
+    undoLastMove() {
+        // We have to go back in history to the previous move.
     }
 
     clickCell(x, y) {
@@ -171,6 +176,9 @@ class Game extends React.Component {
                     />
                     <SkipTurnButton
                         skipTurn={this.skipTurn}
+                    />
+                    <UndoTurnButton
+                        undoLastMove={this.undoLastMove}
                     />
                 </div>
             </div>
