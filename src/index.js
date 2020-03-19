@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {checkForRegularWin} from './Rules';
+import {checkForRegularWin, checkForDiagonalWin} from './Rules';
 import {Board, ResetGameButton, SkipTurnButton, UndoTurnButton, LogBoardButton} from './Board'
 
 class Game extends React.Component {
@@ -78,6 +78,7 @@ class Game extends React.Component {
         const board = [...this.board];
         const existingPiece = board[x][y];
         const placePiece = (x, y, player) => board[x][y] = player;
+        let isPlayerOne;
 
         if (this.allowChangeSquare && existingPiece) {
             // We are flipping an existing piece over.
@@ -86,18 +87,17 @@ class Game extends React.Component {
             } else {
                 placePiece(x, y, null);
             }
-            this.state.isPlayerOne = existingPiece === this.players.two;
+            isPlayerOne = existingPiece === this.players.two;
         } else if (!existingPiece) {
             // We are placing into a blank square.
             placePiece(x, y, this.state.isPlayerOne ? this.players.one : this.players.two);
-            this.state.isPlayerOne = !this.state.isPlayerOne;
+            isPlayerOne = !this.state.isPlayerOne;
         }
 
-        this.state.lastClicked = [x, y];
         this.setState({
             board: board,
-            isPlayerOne: this.state.isPlayerOne,
-            lastClicked: this.state.lastClicked
+            isPlayerOne: isPlayerOne,
+            lastClicked: [x, y],
         });
     }
 
@@ -109,9 +109,10 @@ class Game extends React.Component {
 
         let isXWinner = checkForRegularWin(this.board, player, rules, 'horizontal');
         let isYWinner = checkForRegularWin(this.board, player, rules, 'vertical');
-        // let isDWinner = checkForRegularWin(this.board, player, rules, 'diagonal');
+        let isLDWinner = checkForDiagonalWin(this.board, player, rules, 'ltr');
+        let isRDWinner = checkForDiagonalWin(this.board, player, rules, 'rtl');
 
-        return isXWinner || isYWinner;
+        return isXWinner || isYWinner || isLDWinner || isRDWinner;
     }
 
     render() {
