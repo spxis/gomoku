@@ -8,16 +8,20 @@ class Board extends React.Component {
         this.board = props.board;
         this.players = props.players;
         this.isPlayerOne = props.isPlayerOne;
-        this.lastClicked = [-1, -1];
+        this.lastClicked = props.lastClicked;
     }
 
-    renderCell(x, y) {
+    renderCell(x, y, cellClass) {
         return (
             <Square
                 key={'row-' + x + '-col-' + y}
                 title={
                     'Coordinates: [' + x + ',' + y + ']\n' +
-                    'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']'
+                    'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']' + '\n' +
+                    'Classname: ' + cellClass
+                }
+                className={
+                    cellClass
                 }
                 value={
                     this.props.board[x][y]
@@ -33,7 +37,9 @@ class Board extends React.Component {
         let row = [];
         let columns = [];
         for (const colId of cols) {
-            columns.push(this.renderCell(rowId, colId));
+            const highlightCell = this.props.lastClicked[0] === rowId && this.props.lastClicked[1] === colId;
+            const className = highlightCell ? 'selected' : '';
+            columns.push(this.renderCell(rowId, colId, className));
         }
         row.push(<BoardRow
             key={"row-" + rowId}
@@ -77,7 +83,7 @@ function Square(props) {
     return (
         <button
             title={props.title}
-            className="square"
+            className={'square ' + props.className}
             onClick={props.onClick}
         >{props.value}</button>
     );

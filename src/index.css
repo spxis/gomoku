@@ -41,6 +41,14 @@ div#root {
     background: #efefef;
 }
 
+.square.selected {
+    background-color: #ffbfc8;
+}
+
+.square.selected:hover {
+    background-color: #ffa9a9;
+}
+
 .kbd-navigation .square:focus {
     background: #ddd;
 }

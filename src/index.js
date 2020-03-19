@@ -7,9 +7,9 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        this.board_rows = 19;
-        this.board_columns = 19;
-        this.cellsRequiredToWin = 5;
+        this.board_rows = 3;
+        this.board_columns = 3;
+        this.cellsRequiredToWin = 3;
         this.exactMatchRequired = true;
 
         this.createBoard = this.createBoard.bind(this);
@@ -21,8 +21,8 @@ class Game extends React.Component {
         this.isPlayerOne = true;
         this.lastClicked = [-1, -1];
         this.players = {
-            one: 'X',
-            two: 'O',
+            one: 'H',
+            two: 'J',
         };
 
         this.state = {
@@ -153,6 +153,7 @@ class Game extends React.Component {
                         board={this.state.board}
                         players={this.state.players}
                         isPlayerOne={this.state.isPlayerOne}
+                        lastClicked={this.state.lastClicked}
                         clickCell={this.clickCell}
                     />
                 </div>
