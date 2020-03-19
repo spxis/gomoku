@@ -119,4 +119,14 @@ function UndoTurnButton(props) {
     );
 }
 
-export {Board, ResetGameButton, SkipTurnButton, UndoTurnButton};
+function LogBoardButton(props) {
+    return (
+        <button
+            title="Log Board"
+            className="button"
+            onClick={props.logBoard}
+        >Log Board</button>
+    );
+}
+
+export {Board, ResetGameButton, SkipTurnButton, UndoTurnButton, LogBoardButton};

@@ -4,17 +4,37 @@ body {
 }
 
 ol, ul {
-    padding-left: 30px;
-}
-
-div {
-}
-
-div#root {
+    padding-left: 15px;
 }
 
 .status {
     margin-bottom: 10px;
+}
+
+.board-row:after {
+    clear: both;
+    content: "";
+    display: table;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.game {
+    transform: scale(2);
+    transform-origin: 0 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-board {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.game-info {
+    margin-left: 20px;
 }
 
 .square {
@@ -53,18 +73,4 @@ div#root {
     background: #ddd;
 }
 
-.board-row:after {
-    clear: both;
-    content: "";
-    display: table;
-}
-
-.game {
-    display: flex;
-    flex-direction: column;
-}
-
-.game-info {
-    margin-left: 20px;
-}
 

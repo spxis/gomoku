@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {checkForRegularWin} from './Rules';
-import {Board, ResetGameButton, SkipTurnButton, UndoTurnButton} from './Board'
+import {Board, ResetGameButton, SkipTurnButton, UndoTurnButton, LogBoardButton} from './Board'
 
 class Game extends React.Component {
     constructor(props) {
@@ -19,6 +19,7 @@ class Game extends React.Component {
         this.skipTurn = this.skipTurn.bind(this);
         this.undoLastMove = this.undoLastMove.bind(this);
         this.clickCell = this.clickCell.bind(this);
+        this.logBoard = this.logBoard.bind(this);
 
         this.board = this.createBoard(this.board_rows, this.board_columns);
         this.isPlayerOne = true;
@@ -63,6 +64,10 @@ class Game extends React.Component {
             isPlayerOne: this.isPlayerOne,
             lastClicked: this.lastClicked,
         });
+    }
+
+    logBoard() {
+        console.log(this.board);
     }
 
     undoLastMove() {
@@ -142,6 +147,9 @@ class Game extends React.Component {
                     <UndoTurnButton
                         undoLastMove={this.undoLastMove}
                     />
+                    <LogBoardButton
+                        logBoard={this.logBoard}
+                    >Log Board</LogBoardButton>
                 </div>
             </div>
         );
