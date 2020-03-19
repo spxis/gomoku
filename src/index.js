@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {checkForRegularWin} from './Rules';
 import {Board, ResetGameButton, SkipTurnButton, UndoTurnButton} from './Board'
 
 class Game extends React.Component {
@@ -11,6 +12,7 @@ class Game extends React.Component {
         this.board_columns = 10;
         this.cellsRequiredToWin = 3;
         this.exactMatchRequired = true;
+        this.allowChangeSquare = true;
 
         this.createBoard = this.createBoard.bind(this);
         this.resetBoard = this.resetBoard.bind(this);
@@ -70,20 +72,22 @@ class Game extends React.Component {
     clickCell(x, y) {
         const board = [...this.board];
         const existingPiece = board[x][y];
+        const placePiece = (x, y, player) => board[x][y] = player;
 
-        if (existingPiece) {
+        if (this.allowChangeSquare && existingPiece) {
             // We are flipping an existing piece over.
-            if (board[x][y] === this.players.one) {
-                board[x][y] = this.players.two;
+            if (existingPiece === this.players.one) {
+                placePiece(x, y, this.players.two);
             } else {
-                board[x][y] = null;
+                placePiece(x, y, null);
             }
-            this.state.isPlayerOne = board[x][y] === this.players.two;
-        } else {
+            this.state.isPlayerOne = existingPiece === this.players.two;
+        } else if (!existingPiece) {
             // We are placing into a blank square.
-            board[x][y] = this.state.isPlayerOne ? this.players.one : this.players.two;
+            placePiece(x, y, this.state.isPlayerOne ? this.players.one : this.players.two);
             this.state.isPlayerOne = !this.state.isPlayerOne;
         }
+
         this.state.lastClicked = [x, y];
         this.setState({
             board: board,
@@ -92,58 +96,15 @@ class Game extends React.Component {
         });
     }
 
-    checkForRegularWin(board, player, rules, direction = 'horizontal') {
-        let isWinner = false;
-        let counter = 0;
-
-        for (let x = 0; x < board.length; x++) {
-            for (let y = 0; y < board[x].length; y++) {
-                const cell = direction === 'horizontal' ? board[x][y] : board[y][x];
-                if (rules.exactMatchRequired) {
-                    if (cell === player && counter <= rules.cellsRequiredToWin) {
-                        counter++;
-                    } else if (counter > rules.cellsRequiredToWin) {
-                        isWinner = false;
-                        break;
-                    } else if (counter === rules.cellsRequiredToWin) {
-                        isWinner = true;
-                        break;
-                    } else {
-                        isWinner = false;
-                        counter = 0;
-                    }
-                } else {
-                    if (cell === player && counter < rules.cellsRequiredToWin) {
-                        counter++;
-                    } else if (counter === rules.cellsRequiredToWin) {
-                        isWinner = true;
-                        break;
-                    } else {
-                        isWinner = false;
-                        counter = 0;
-                    }
-                }
-                if (isWinner) {
-                    break;
-                }
-            }
-            if (isWinner) {
-                break;
-            }
-        }
-
-        return isWinner;
-    }
-
     hasWin(player) {
         const rules = {
             exactMatchRequired: this.exactMatchRequired,
             cellsRequiredToWin: this.cellsRequiredToWin
         };
 
-        let isXWinner = this.checkForRegularWin(this.board, player, rules, 'horizontal');
-        let isYWinner = this.checkForRegularWin(this.board, player, rules, 'vertical');
-        // let isDWinner = this.checkForRegularWin(this.board, player, rules, 'diagonal');
+        let isXWinner = checkForRegularWin(this.board, player, rules, 'horizontal');
+        let isYWinner = checkForRegularWin(this.board, player, rules, 'vertical');
+        // let isDWinner = checkForRegularWin(this.board, player, rules, 'diagonal');
 
         return isXWinner || isYWinner;
     }
@@ -167,7 +128,8 @@ class Game extends React.Component {
                     <ul>
                         <li>Player {this.players.one}: {this.hasWin(this.players.one) ? 'WIN' : '-'}</li>
                         <li>Player {this.players.two}: {this.hasWin(this.players.two) ? 'WIN' : '-'}</li>
-                        <li>Last clicked cell [{this.state.lastClicked[0]},{this.state.lastClicked[1]}]</li>
+                        <li>Needed to win: {this.cellsRequiredToWin}</li>
+                        <li>Last clicked cell: [{this.state.lastClicked[0]},{this.state.lastClicked[1]}]</li>
                     </ul>
                 </div>
                 <div className="game-panel">
