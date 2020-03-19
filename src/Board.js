@@ -17,7 +17,7 @@ class Board extends React.Component {
                 key={'row-' + x + '-col-' + y}
                 title={
                     'Coordinates: [' + x + ',' + y + ']\n' +
-                    'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']' + '\n' +
+                    'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']\n' +
                     'Classname: ' + cellClass
                 }
                 className={
