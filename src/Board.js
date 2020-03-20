@@ -94,6 +94,7 @@ function ResetGameButton(props) {
         <button
             title="Reset Game"
             className="button"
+            disabled={props.disabled}
             onClick={props.resetBoard}
         >Reset Game</button>
     );
@@ -104,6 +105,7 @@ function SkipTurnButton(props) {
         <button
             title="Skip Turn"
             className="button"
+            disabled={props.disabled}
             onClick={props.skipTurn}
         >Skip Turn</button>
     );
@@ -114,6 +116,7 @@ function UndoTurnButton(props) {
         <button
             title="Undo"
             className="button"
+            disabled={props.disabled}
             onClick={props.undoLastMove}
         >Undo Last Move</button>
     );
@@ -124,6 +127,7 @@ function LogBoardButton(props) {
         <button
             title="Log Board"
             className="button"
+            disabled={props.disabled}
             onClick={props.logBoard}
         >Log Board</button>
     );
