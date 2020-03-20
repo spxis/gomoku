@@ -61,11 +61,10 @@ class Board extends React.Component {
     render() {
         const rowCount = this.settings.boardRows;
         const colCount = this.settings.boardColumns;
-
-        let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.settings.players.one : this.settings.players.two);
-
         const colIds = Array.from(Array(colCount), (d, i) => i);
+        const status = 'Next up: Player ' + (this.props.isPlayerOne ? this.settings.players.one : this.settings.players.two);
         let rows = [];
+
         for (let rowId = 0; rowId < rowCount; rowId++) {
             rows.push(this.renderRow(rowId, colIds));
         }
