@@ -8,11 +8,14 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        this.board_rows = 10;
-        this.board_columns = 10;
-        this.cellsRequiredToWin = 3;
-        this.exactMatchRequired = true;
-        this.allowChangeSquare = true;
+        this.board_rows = 7;
+        this.board_columns = 7;
+        this.settings = {
+            cellsRequiredToWin: 3,
+            exactMatchRequired: true,
+            allowChangeSquare: true,
+            winningMoves: {},
+        };
 
         this.createBoard = this.createBoard.bind(this);
         this.resetBoard = this.resetBoard.bind(this);
@@ -80,7 +83,7 @@ class Game extends React.Component {
         const placePiece = (x, y, player) => board[x][y] = player;
         let isPlayerOne;
 
-        if (this.allowChangeSquare && existingPiece) {
+        if (this.settings.allowChangeSquare && existingPiece) {
             // We are flipping an existing piece over.
             if (existingPiece === this.players.one) {
                 placePiece(x, y, this.players.two);
@@ -102,15 +105,10 @@ class Game extends React.Component {
     }
 
     hasWin(player) {
-        const rules = {
-            exactMatchRequired: this.exactMatchRequired,
-            cellsRequiredToWin: this.cellsRequiredToWin
-        };
-
-        let isXWinner = checkForRegularWin(this.board, player, rules, 'horizontal');
-        let isYWinner = checkForRegularWin(this.board, player, rules, 'vertical');
-        let isLDWinner = checkForDiagonalWin(this.board, player, rules, 'ltr');
-        let isRDWinner = checkForDiagonalWin(this.board, player, rules, 'rtl');
+        let isXWinner = checkForRegularWin(this.board, player, this.settings, 'horizontal');
+        let isYWinner = checkForRegularWin(this.board, player, this.settings, 'vertical');
+        let isLDWinner = checkForDiagonalWin(this.board, player, this.settings, 'ltr');
+        let isRDWinner = checkForDiagonalWin(this.board, player, this.settings, 'rtl');
 
         return isXWinner || isYWinner || isLDWinner || isRDWinner;
     }
@@ -132,9 +130,9 @@ class Game extends React.Component {
                 <div className="game-info">
                     Game Status:
                     <ul>
-                        <li>Player {this.players.one}: {this.hasWin(this.players.one) ? 'WIN' : '-'}</li>
-                        <li>Player {this.players.two}: {this.hasWin(this.players.two) ? 'WIN' : '-'}</li>
-                        <li>Needed to win: {this.cellsRequiredToWin}</li>
+                        <li>Player {this.players.one}: {this.hasWin(this.players.one) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.players.one]) : '-'}</li>
+                        <li>Player {this.players.two}: {this.hasWin(this.players.two) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.players.two]) : '-'}</li>
+                        <li>Needed to win: {this.settings.cellsRequiredToWin}</li>
                         <li>Last clicked cell: [{this.state.lastClicked[0]},{this.state.lastClicked[1]}]</li>
                     </ul>
                 </div>
@@ -146,6 +144,7 @@ class Game extends React.Component {
                         skipTurn={this.skipTurn}
                     />
                     <UndoTurnButton
+                        disabled={"disabled"}
                         undoLastMove={this.undoLastMove}
                     />
                     <LogBoardButton
