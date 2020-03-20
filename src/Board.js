@@ -3,13 +3,11 @@ import React from "react";
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        this.rows = props.rows;
-        this.columns = props.columns;
         this.board = props.board;
+        this.settings = props.settings;
         this.players = props.players;
         this.isPlayerOne = props.isPlayerOne;
         this.lastClicked = props.lastClicked;
-        this.settings = props.settings;
     }
 
     renderCell(x, y, cellClass) {
@@ -62,8 +60,8 @@ class Board extends React.Component {
     }
 
     render() {
-        const rowCount = this.rows;
-        const colCount = this.columns;
+        const rowCount = this.settings.boardRows;
+        const colCount = this.settings.boardColumns;
 
         let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.players.one : this.players.two);
 
