@@ -69,6 +69,10 @@ ol, ul {
     background-color: #ffa9a9;
 }
 
+.square.winning, .square.winning:hover {
+    background-color: #b7ffbe;
+}
+
 .kbd-navigation .square:focus {
     background: #ddd;
 }
