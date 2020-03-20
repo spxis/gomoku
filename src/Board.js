@@ -5,7 +5,6 @@ class Board extends React.Component {
         super(props);
         this.board = props.board;
         this.settings = props.settings;
-        this.players = props.players;
         this.isPlayerOne = props.isPlayerOne;
         this.lastClicked = props.lastClicked;
     }
@@ -63,7 +62,7 @@ class Board extends React.Component {
         const rowCount = this.settings.boardRows;
         const colCount = this.settings.boardColumns;
 
-        let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.players.one : this.players.two);
+        let status = 'Next up: Player ' + (this.props.isPlayerOne ? this.settings.players.one : this.settings.players.two);
 
         const colIds = Array.from(Array(colCount), (d, i) => i);
         let rows = [];

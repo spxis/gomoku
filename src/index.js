@@ -17,6 +17,10 @@ class Game extends React.Component {
             winningMoves: {},
             winningClass: 'winning',
             selectedClass: 'selected',
+            players: {
+                one: 'X',
+                two: 'O',
+            }
         };
 
         this.createBoard = this.createBoard.bind(this);
@@ -29,14 +33,9 @@ class Game extends React.Component {
         this.board = this.createBoard(this.settings.boardRows, this.settings.boardColumns);
         this.isPlayerOne = true;
         this.lastClicked = [-1, -1];
-        this.players = {
-            one: 'X',
-            two: 'O',
-        };
-
         this.state = {
             board: this.board,
-            players: this.players,
+            players: this.settings.players,
             isPlayerOne: this.isPlayerOne,
             lastClicked: this.lastClicked,
         };
@@ -87,15 +86,15 @@ class Game extends React.Component {
 
         if (this.settings.allowChangeSquare && existingPiece) {
             // We are flipping an existing piece over.
-            if (existingPiece === this.players.one) {
-                placePiece(x, y, this.players.two);
+            if (existingPiece === this.settings.players.one) {
+                placePiece(x, y, this.settings.players.two);
             } else {
                 placePiece(x, y, null);
             }
-            isPlayerOne = existingPiece === this.players.two;
+            isPlayerOne = existingPiece === this.settings.players.two;
         } else if (!existingPiece) {
             // We are placing into a blank square.
-            placePiece(x, y, this.state.isPlayerOne ? this.players.one : this.players.two);
+            placePiece(x, y, this.state.isPlayerOne ? this.settings.players.one : this.settings.players.two);
             isPlayerOne = !this.state.isPlayerOne;
         }
 
@@ -127,11 +126,8 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
-                        rows={this.settings.boardRows}
-                        columns={this.settings.boardColumns}
                         board={this.state.board}
                         settings={this.settings}
-                        players={this.state.players}
                         isPlayerOne={this.state.isPlayerOne}
                         lastClicked={this.state.lastClicked}
                         clickCell={this.clickCell}
@@ -140,8 +136,8 @@ class Game extends React.Component {
                 <div className="game-info">
                     Game Status:
                     <ul>
-                        <li>Player {this.players.one}: {this.hasWin(this.players.one) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.players.one]) : '-'}</li>
-                        <li>Player {this.players.two}: {this.hasWin(this.players.two) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.players.two]) : '-'}</li>
+                        <li>Player {this.settings.players.one}: {this.hasWin(this.settings.players.one) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.settings.players.one]) : '-'}</li>
+                        <li>Player {this.settings.players.two}: {this.hasWin(this.settings.players.two) ? 'WIN ' + JSON.stringify(this.settings.winningMoves[this.settings.players.two]) : '-'}</li>
                         <li>Needed to win: {this.settings.cellsRequiredToWin}</li>
                         <li>Last clicked cell: [{this.state.lastClicked[0]},{this.state.lastClicked[1]}]</li>
                     </ul>
