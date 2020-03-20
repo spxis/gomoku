@@ -8,9 +8,9 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        this.board_rows = 7;
-        this.board_columns = 7;
         this.settings = {
+            boardRows: 7,
+            boardColumns: 7,
             cellsRequiredToWin: 3,
             exactMatchRequired: true,
             allowChangeSquare: true,
@@ -26,7 +26,7 @@ class Game extends React.Component {
         this.clickCell = this.clickCell.bind(this);
         this.logBoard = this.logBoard.bind(this);
 
-        this.board = this.createBoard(this.board_rows, this.board_columns);
+        this.board = this.createBoard(this.settings.boardRows, this.settings.boardColumns);
         this.isPlayerOne = true;
         this.lastClicked = [-1, -1];
         this.players = {
@@ -54,7 +54,7 @@ class Game extends React.Component {
     }
 
     resetBoard() {
-        this.board = this.createBoard(this.board_columns, this.board_rows);
+        this.board = this.createBoard(this.settings.boardColumns, this.settings.boardRows);
         this.isPlayerOne = true;
         this.setState({
             board: this.board,
@@ -127,8 +127,8 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
-                        rows={this.board_rows}
-                        columns={this.board_columns}
+                        rows={this.settings.boardRows}
+                        columns={this.settings.boardColumns}
                         board={this.state.board}
                         settings={this.settings}
                         players={this.state.players}
