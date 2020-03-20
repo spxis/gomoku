@@ -15,6 +15,8 @@ class Game extends React.Component {
             exactMatchRequired: true,
             allowChangeSquare: true,
             winningMoves: {},
+            winningClass: 'winning',
+            selectedClass: 'selected',
         };
 
         this.createBoard = this.createBoard.bind(this);
@@ -105,12 +107,19 @@ class Game extends React.Component {
     }
 
     hasWin(player) {
-        let isXWinner = checkForRegularWin(this.board, player, this.settings, 'horizontal');
-        let isYWinner = checkForRegularWin(this.board, player, this.settings, 'vertical');
-        let isLDWinner = checkForDiagonalWin(this.board, player, this.settings, 'ltr');
-        let isRDWinner = checkForDiagonalWin(this.board, player, this.settings, 'rtl');
+        const isXWinner = checkForRegularWin(this.board, player, this.settings, 'horizontal');
+        const isYWinner = checkForRegularWin(this.board, player, this.settings, 'vertical');
+        const isLDWinner = checkForDiagonalWin(this.board, player, this.settings, 'ltr');
+        const isRDWinner = checkForDiagonalWin(this.board, player, this.settings, 'rtl');
+        const playerWins = isXWinner || isYWinner || isLDWinner || isRDWinner;
 
-        return isXWinner || isYWinner || isLDWinner || isRDWinner;
+        if (!playerWins) {
+            // Ultimately should this happen in each of the checks?
+            // We might want to have this object populate for each win type.
+            this.settings.winningMoves[player] = [];
+        }
+
+        return playerWins;
     }
 
     render() {
@@ -121,6 +130,7 @@ class Game extends React.Component {
                         rows={this.board_rows}
                         columns={this.board_columns}
                         board={this.state.board}
+                        settings={this.settings}
                         players={this.state.players}
                         isPlayerOne={this.state.isPlayerOne}
                         lastClicked={this.state.lastClicked}

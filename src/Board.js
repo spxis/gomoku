@@ -9,19 +9,30 @@ class Board extends React.Component {
         this.players = props.players;
         this.isPlayerOne = props.isPlayerOne;
         this.lastClicked = props.lastClicked;
+        this.settings = props.settings;
     }
 
     renderCell(x, y, cellClass) {
+        const player = this.props.board[x][y];
+        let winningClass = '';
+        if (player && this.settings.winningMoves[player]) {
+            this.settings.winningMoves[player].forEach(moves => {
+                if (moves[0] === x && moves[1] === y) {
+                    winningClass = this.settings.winningClass;
+                }
+            });
+        }
+
         return (
             <Square
                 key={'row-' + x + '-col-' + y}
                 title={
                     'Coordinates: [' + x + ',' + y + ']\n' +
                     'Readable coords: [' + (x + 1) + ',' + (y + 1) + ']\n' +
-                    'Classname: ' + cellClass
+                    'Classname: ' + cellClass + ' ' + winningClass
                 }
                 className={
-                    cellClass
+                    cellClass + ' ' + winningClass
                 }
                 value={
                     this.props.board[x][y]
@@ -38,7 +49,7 @@ class Board extends React.Component {
         let columns = [];
         for (const colId of cols) {
             const highlightCell = this.props.lastClicked[0] === rowId && this.props.lastClicked[1] === colId;
-            const className = highlightCell ? 'selected' : '';
+            const className = highlightCell ? this.settings.selectedClass : '';
             columns.push(this.renderCell(rowId, colId, className));
         }
         row.push(<BoardRow

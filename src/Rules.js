@@ -3,15 +3,19 @@ import React from "react";
 export function checkForRegularWin(board, player, settings, direction = 'horizontal') {
     let isWinner = false;
     let counter = 0;
+    let winningMoves = [];
+    const isHorizontal = direction === 'horizontal';
 
     for (let x = 0; x < board.length; x++) {
         for (let y = 0; y < board[x].length; y++) {
-            const cell = direction === 'horizontal' ? board[x][y] : board[y][x];
+            const cell = isHorizontal ? board[x][y] : board[y][x];
             if (settings.exactMatchRequired) {
                 if (cell === player && counter <= settings.cellsRequiredToWin) {
+                    winningMoves.push(isHorizontal ? [x, y] : [y, x]);
                     counter++;
                 } else if (counter > settings.cellsRequiredToWin) {
                     isWinner = false;
+                    winningMoves = [];
                     break;
                 } else if (counter === settings.cellsRequiredToWin) {
                     // console.log('Winner:', player, direction);
@@ -19,10 +23,12 @@ export function checkForRegularWin(board, player, settings, direction = 'horizon
                     break;
                 } else {
                     isWinner = false;
+                    winningMoves = [];
                     counter = 0;
                 }
             } else {
                 if (cell === player && counter < settings.cellsRequiredToWin) {
+                    winningMoves.push(isHorizontal ? [x, y] : [y, x]);
                     counter++;
                 } else if (counter === settings.cellsRequiredToWin) {
                     isWinner = true;
@@ -30,14 +36,17 @@ export function checkForRegularWin(board, player, settings, direction = 'horizon
                     break;
                 } else {
                     isWinner = false;
+                    winningMoves = [];
                     counter = 0;
                 }
             }
             if (isWinner) {
+                settings.winningMoves[player] = winningMoves;
                 break;
             }
         }
         if (isWinner) {
+            settings.winningMoves[player] = winningMoves;
             break;
         }
     }
@@ -47,20 +56,20 @@ export function checkForRegularWin(board, player, settings, direction = 'horizon
 
 export function checkForDiagonalWin(board, player, settings, direction = 'ltr') {
     let isWinner = false;
-    const leftToRight = direction === 'ltr';
+    const isLeftToRight = direction === 'ltr';
     const xStart = 0;
-    const yStart = leftToRight ? 0 : board[0].length - 1;
+    const yStart = isLeftToRight ? 0 : board[0].length - 1;
     const xEnd = board.length - (settings.cellsRequiredToWin);
-    const yEnd = leftToRight ? board[0].length - (settings.cellsRequiredToWin) : settings.cellsRequiredToWin - 1;
+    const yEnd = isLeftToRight ? board[0].length - (settings.cellsRequiredToWin) : settings.cellsRequiredToWin - 1;
     let winningMoves = [];
     // console.log(`checking '${player}', direction: ${direction}, [${xStart},${yStart}]->[${xEnd},${yEnd}]`);
 
     for (let x = xStart; x <= xEnd; x++) {
         let counter = 0;
-        for (let y = yStart; leftToRight ? y <= yEnd : y >= 0; leftToRight ? y++ : y--) {
+        for (let y = yStart; isLeftToRight ? y <= yEnd : y >= 0; isLeftToRight ? y++ : y--) {
             for (let check = 0; check < settings.cellsRequiredToWin; check++) {
                 const xPosition = x + check;
-                const yPosition = leftToRight ? y + check : y - check;
+                const yPosition = isLeftToRight ? y + check : y - check;
                 // console.log(' - positions :', xPosition, yPosition);
                 const cell = board[xPosition][yPosition];
 
